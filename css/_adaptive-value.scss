@@ -1,0 +1,27 @@
+//Адаптивное свойство
+@mixin adaptive-value($indentType, $pcSize, $mobSize, $maxSize) {
+    $addSize: $pcSize - $mobSize;
+
+    @if $maxSize==1 {
+        //Только если меньше контейнера
+        #{$indentType}: $pcSize + px;
+
+        @media (max-width: #{1920 + px}) {
+            #{$indentType}: calc(#{$mobSize + px} + #{$addSize} * ((100vw - 320px) / #{1920 - 320}));
+        }
+    }
+
+    @else if $maxSize==2 {
+        //Только если больше контейнера
+        #{$indentType}: $pcSize + px;
+
+        @media (min-width: #{1920 + px}) {
+            #{$indentType}: calc(#{$mobSize + px} + #{$addSize} * ((100vw - 320px) / #{1920 - 320}));
+        }
+    }
+
+    @else {
+        //Всегда
+        #{$indentType}: calc(#{$mobSize + px} + #{$addSize} * ((100vw - 320px) / #{1920 - 320}));
+    }
+}

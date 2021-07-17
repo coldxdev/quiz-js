@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <section class="section">
+        <div class="section__inner">
+            <h1 class="section__title">Добро пожаловать на проверку <br> своих знаний JavaScript!</h1>
+            <h3 class="section__subtitle">Этот тест отлично подходит как для новичков, так и для более продвинутых людей</h3>
+            <button class="section__btn btn" id="start-btn">Старт</button>
+        </div>
+    </section>
+
+    <div class="quiz modal">
+        <div class="modal__overlay"></div>
+        <div class="modal__body">
+            <div class="quiz__content">
+                <button class="modal__close"><img src="images/close.svg" alt=""></button>
+                <h3 class="quiz__title">Вопрос
+                    <span id="number-of-question"></span>
+                    из
+                    <span id="number-of-all-questions"></span>
+                </h3>
+                <div class="quiz__question" id="question"></div>
+                <div class="quiz__options">
+                    <div data-id="0" class="quiz__option"></div>
+                    <div data-id="1" class="quiz__option"></div>
+                    <div data-id="2" class="quiz__option"></div>
+                    <div data-id="3" class="quiz__option"></div>
+                </div>
+                <div class="quiz__error">Вам нужно выбрать один из вариантов ответа!</div>
+                <button class="quiz__btn btn" id="next-btn">Перейти дальше</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="quiz-result modal">
+        <div class="modal__overlay"></div>
+        <div class="modal__body">
+            <div class="quiz-result__content">
+                <button class="modal__close"></button>
+                <h3 class="quiz-result__title">Просто замечательно!</h3>
+                <p class="quiz-result__text">Вы набрали 
+                    <span id="quiz-result-score"></span> 
+                    баллов
+                    из 
+                    <span id="number-of-all-questions2"></span></p>
+                <button class="quiz-result__btn btn" id="try-again-btn">Попробовать ещё раз</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/quiz.js"></script>
+</body>
+
+</html>
