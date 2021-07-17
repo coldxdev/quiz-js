@@ -1,0 +1,15 @@
+build
+
+__MACOSX
+.Saved
+_arc
+node_modules
+.vscode
+.publish
+.DS_Store
+*.log
+*.rar
+*.zip
+.idea
+ex_files
+Thumbs.db
