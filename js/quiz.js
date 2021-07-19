@@ -1,4 +1,6 @@
-const questions = [{
+/* All questions */
+const questions = [
+    {
         question: 'Что в JavaScript означет "use strict"?',
         options: [
             'Медленный режим',
@@ -7,6 +9,7 @@ const questions = [{
             'Турбо режим',
         ],
         answer: 2,
+
     },
     {
         question: 'Почему используют стрелочные функции, вместо обычных?',
@@ -30,180 +33,174 @@ const questions = [{
     },
 ]
 
-/* Buttons */
-const nextBtn = document.getElementById('next-btn'),
-    startBtn = document.getElementById('start-btn'),
-    tryAgainBtn = document.getElementById('try-again-btn');
+/* Buttons  */
+const btnStart = document.getElementById('btn-start');
+const btnNext = document.getElementById('btn-next');
+const btnTryAgain = document.getElementById('btn-try-again');
 
-/*  Numbers */
-const numberOfQuestion = document.getElementById('number-of-question'),
-    numberOfAllQuestions = document.getElementById('number-of-all-questions'),
-    numberOfAllQuestions2 = document.getElementById('number-of-all-questions2');
+/* Modals */
+const quiz = document.querySelector('.quiz');
+const quizResult = document.querySelector('.quiz-result');
 
-const question = document.getElementById('question'),
-    options = document.querySelectorAll('.quiz__option'),
-    error = document.querySelector('.quiz__error'),
-    modals = document.querySelectorAll('.modal');
+/* Numbers */
+const numberOfQuestion = document.getElementById('number-of-question');
+const numberOfAllQuestions = document.getElementById('number-of-all-questions');
+const numberOfAllQuestions2 = document.getElementById('number-of-all-questions2');
+const quizResultScore = document.getElementById('quiz-result-score');
 
-let indexOfQuestion,
-    indexOfPage = 0;
+/* Options */
+const optionsElems = document.querySelectorAll('.quiz__option');
 
-let score = 0,
-    quizResultScore = document.getElementById('quiz-result-score');
+/* Question  */
+const question = document.getElementById('question');
 
-const quizResult = document.querySelector('.quiz-result'),
-    quiz = document.querySelector('.quiz');
+/* Error  */
+const quizError = document.querySelector('.quiz__error');
 
-startBtn.addEventListener('click', () => {
-    randomQuestion();
-    quiz.classList.add('active');
-})
-
-
-tryAgainBtn.addEventListener('click', () => {
-    quizResult.classList.remove('active');
-    quiz.classList.add('active');
-    randomQuestion();
-})
-quizResult.addEventListener('click', e => {
-    const targetClass = e.target.classList;
-
-    if (targetClass.contains("modal__overlay") || targetClass.contains("modal__body") || targetClass.contains("modal__close")) {
-        modals.forEach(modal => {
-            modal.classList.remove('active');
-        })
-
-        quizReset();
-    }
-})
-
-quiz.addEventListener('click', e => {
-    const targetClass = e.target.classList;
-    if (targetClass.contains("modal__overlay") || targetClass.contains("modal__body") || targetClass.contains("modal__close")) {
-        quiz.classList.remove('active');
-        quizReset();
-    }
-})
-
-const loadNumbersOfQuestions = () => {
-    numberOfQuestion.innerHTML = indexOfPage + 1;
-    numberOfAllQuestions.innerHTML = questions.length;
-}
-
-const loadOptions = () => {
-    options.forEach((option, i) => {
-        option.innerHTML = questions[indexOfQuestion].options[i];
-    })
-}
-
-const loadQuestion = () => {
-    question.innerHTML = questions[indexOfQuestion].question;
-}
-
-const checkAnswer = () => {
-    options.forEach(option => {
-        option.addEventListener('click', () => {
-            error.classList.remove('active')
-            if (option.dataset.id == questions[indexOfQuestion].answer) {
-                option.classList.add('correct');
-                score++;
-            }else {
-                option.classList.add('wrong');
-            }
-            if(indexOfPage == questions.length){
-                nextBtn.innerHTML = "Узнать результаты";
-            }
-            disabledOptions();
-        })
-    })
-}
-
-checkAnswer();
-
-const disabledOptions = () => {
-    options.forEach(option => {
-        option.classList.add('disabled')
-        if (option.dataset.id == questions[indexOfQuestion].answer) {
-            option.classList.add('correct');
-        }
-    })
-}
-
-const resetOptions = () => {
-    options.forEach(option => {
-        option.classList.remove('disabled', 'correct', 'wrong');
-    })
-}
-
-const reloadQuiz = () => {
-    loadNumbersOfQuestions();
-    loadQuestion();
-    loadOptions();
-}
-const quizLoad = () => {
-    loadNumbersOfQuestions();
-    loadQuestion();
-    loadOptions();
-    indexOfPage++;
-}
-
+/* Values */
+let indexOfQuestion;
+let indexOfPage = 0;
+let amountOfQuestions = questions.length;
+let score = 0;
 let completedQuestions = [];
 
+/* Quiz modal  */
+btnStart.addEventListener('click', () => {
+    quiz.classList.add('active');
+});
+quiz.addEventListener('click', e => {
+    const target = e.target;
+    if (target.classList.contains('modal__body')
+        || target.classList.contains('modal__close')) {
+        quizReset();
+        quiz.classList.remove('active');
+    }
+});
+
+/* Quiz result modal  */
+quizResult.addEventListener('click', e => {
+    const target = e.target;
+    if (target.classList.contains('modal__body')
+        || target.classList.contains('modal__close')) {
+        quizResult.classList.remove('active');
+    }
+});
+
+/* Quiz logic  */
 const randomQuestion = () => {
-    let randomNumber = Math.floor(Math.random() * questions.length);
+    let randomNumber = Math.floor(Math.random() * amountOfQuestions)
     let isDuplicate = false;
-    completedQuestions.forEach(el => {
-        if (el == randomNumber) {
-            isDuplicate = true;
-        }
+
+    completedQuestions.forEach(i => {
+        isDuplicate = i === randomNumber;
+        console.log('duplicate');
     })
 
-    if (isDuplicate) {
-        randomQuestion();
-    } else {
+    if (!isDuplicate) {
         indexOfQuestion = randomNumber;
         completedQuestions.push(indexOfQuestion);
         quizLoad();
+    } else {
+        randomQuestion();
     }
+};
 
+const quizCheckAnswer = () => {
+    optionsElems.forEach(option => {
+        option.addEventListener('click', () => {
+            console.log(score)
+            if (parseInt(option.dataset.id) === questions[indexOfQuestion].answer) {
+                option.classList.add('correct');
+                score++;
+            } else {
+                option.classList.add('wrong');
+            }
+            if (indexOfPage === amountOfQuestions) {
+                btnNext.innerHTML = 'Узнать результаты';
+            }
+            disableOptions();
+        });
+    })
+};
+
+const enableOptions = () => {
+    optionsElems.forEach(option => {
+        option.classList.remove('wrong', 'correct', 'disabled');
+    })
+};
+
+const disableOptions = () => {
+    optionsElems.forEach(option => {
+        option.classList.add('disabled');
+        if (parseInt(option.dataset.id) === questions[indexOfQuestion].answer) {
+            option.classList.add('correct');
+        }
+    })
+};
+
+const quizOptionsLoad = () => {
+    optionsElems.forEach((option, i) => {
+        option.innerHTML = questions[indexOfQuestion].options[i]
+    })
+};
+
+const quizLoad = () => {
+    question.innerHTML = questions[indexOfQuestion].question;
+    numberOfQuestion.innerHTML = indexOfPage + 1;
+    numberOfAllQuestions.innerHTML = amountOfQuestions;
+    quizOptionsLoad();
+    indexOfPage++;
+};
+
+const quizOver = () => {
+    quiz.classList.remove('active');
+    quizResult.classList.add('active');
+    quizResultScore.innerHTML = score;
+    numberOfAllQuestions2.innerHTML = amountOfQuestions;
+}
+
+const quizQuestionReset = () => {
+    enableOptions();
+    quizError.classList.remove('active');
 }
 
 const quizReset = () => {
-    resetOptions();
-    error.classList.remove('active')
-    nextBtn.innerHTML = "Перейти дальше";
+    quizQuestionReset();
     completedQuestions = [];
-    score = 0;
     indexOfPage = 0;
-    reloadQuiz();
-}
+    score = 0;
+    btnNext.innerHTML = 'Перейти дальше';
+    randomQuestion();
+};
 
-const quizValidate = () => {
-    if (!options[0].classList.contains('disabled')) {
-        error.classList.add('active')
-    } else if (indexOfPage == questions.length) {
+const quizCheck = () => {
+    if (indexOfPage === amountOfQuestions) {
         quizOver();
-    } else if (indexOfPage == questions.length - 1) {
-        error.classList.remove('active')
-        randomQuestion()
-        resetOptions();
-
     } else {
-        error.classList.remove('active')
-        randomQuestion()
-        resetOptions();
+        randomQuestion();
     }
 }
 
-
-const quizOver = () => {
-    quizResult.classList.add('active');
-    quizResultScore.innerHTML = score;
-    numberOfAllQuestions2.innerHTML = questions.length;
-    quizReset();
+const quizValidate = () => {
+    if (optionsElems[0].classList.contains('disabled')) {
+        quizQuestionReset();
+        quizCheck();
+    } else {
+        quizError.classList.add('active');
+    }
 }
 
-
-nextBtn.addEventListener('click', () => {
+btnNext.addEventListener('click', () => {
     quizValidate();
+});
+
+btnTryAgain.addEventListener('click', () => {
+    quizResult.classList.remove('active');
+    quiz.classList.add('active');
+    quizReset();
 })
+
+document.addEventListener('DOMContentLoaded', () => {
+    quizCheckAnswer();
+    randomQuestion();
+});
