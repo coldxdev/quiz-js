@@ -57,6 +57,9 @@ const question = document.getElementById('question');
 /* Error  */
 const quizError = document.querySelector('.quiz__error');
 
+/* Quiz result title */
+const quizResultTitle = document.querySelector('.quiz-result__title');
+
 /* Values */
 let indexOfQuestion;
 let indexOfPage = 0;
@@ -93,7 +96,6 @@ const randomQuestion = () => {
 
     completedQuestions.forEach(i => {
         isDuplicate = i === randomNumber;
-        console.log('duplicate');
     })
 
     if (!isDuplicate) {
@@ -108,7 +110,6 @@ const randomQuestion = () => {
 const quizCheckAnswer = () => {
     optionsElems.forEach(option => {
         option.addEventListener('click', () => {
-            console.log(score)
             if (parseInt(option.dataset.id) === questions[indexOfQuestion].answer) {
                 option.classList.add('correct');
                 score++;
@@ -155,6 +156,12 @@ const quizLoad = () => {
 const quizOver = () => {
     quiz.classList.remove('active');
     quizResult.classList.add('active');
+    let scorePercent = score / amountOfQuestions * 100;
+    if(scorePercent < 50){
+        quizResultTitle.innerHTML = "Нужно больше стараться!";
+    } else{
+        quizResultTitle.innerHTML = "Замечательно!";
+    }
     quizResultScore.innerHTML = score;
     numberOfAllQuestions2.innerHTML = amountOfQuestions;
 }
