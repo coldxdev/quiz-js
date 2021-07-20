@@ -33,6 +33,14 @@ const questions = [
     },
 ]
 
+/* Quiz State */
+const quizState = {
+    result: {
+        good: ['Замечательно!', 'Молодец!', 'Крутышка!'],
+        bad: ['Постарайся лучше!', 'Можно и лучше! :(', 'Не твой уровень']
+    },
+}
+
 /* Buttons  */
 const btnStart = document.getElementById('btn-start');
 const btnNext = document.getElementById('btn-next');
@@ -85,6 +93,7 @@ quizResult.addEventListener('click', e => {
     const target = e.target;
     if (target.classList.contains('modal__body')
         || target.classList.contains('modal__close')) {
+        quizReset();
         quizResult.classList.remove('active');
     }
 });
@@ -157,10 +166,12 @@ const quizOver = () => {
     quiz.classList.remove('active');
     quizResult.classList.add('active');
     let scorePercent = score / amountOfQuestions * 100;
-    if(scorePercent < 50){
-        quizResultTitle.innerHTML = "Нужно больше стараться!";
-    } else{
-        quizResultTitle.innerHTML = "Замечательно!";
+    let randomNumber = Math.floor(Math.random() * 3);
+    console.log(randomNumber)
+    if (scorePercent > 50) {
+        quizResultTitle.innerHTML = quizState.result.good[randomNumber];
+    } else {
+        quizResultTitle.innerHTML = quizState.result.bad[randomNumber];
     }
     quizResultScore.innerHTML = score;
     numberOfAllQuestions2.innerHTML = amountOfQuestions;
